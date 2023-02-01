@@ -1,0 +1,60 @@
+﻿@model WebApplication1.Models.EmployeeModel
+@{
+    ViewData["Title"] = "Employee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h1 class="text-center">All Employee Information</h1>
+    </div>
+</div>
+<br />
+<br />
+<table id="YourTableId" class="table table-bordered border-primary table-responsive table-hover">  
+    <thead>  
+        <tr>  
+            <th class="yourTableTh">EMP Id</th>  
+            <th class="yourTableTh">Emp Name</th>  
+            <th class="yourTableTh">Email</th>  
+            <th class="yourTableTh">Phone</th>  
+            <th class="yourTableTh">City</th>  
+            <th class="yourTableTh">Region</th>
+        </tr>  
+    </thead>  
+    <tbody></tbody>  
+</table>                
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                contentType: "application/json",
+                type: "GET",
+                url: "/Session/GetEmployees",
+                success: function (data) {
+                    console.log(data);
+                    var items = '';
+                    $.each(data, function (i, item) {
+                        var rows = "<tr>"
+                            + "<td class='yourTableTh'>" + item.id + "</td>"
+                            + "<td class='yourTableTh'>" + item.name + "</td>"
+                            + "<td class='yourTableTh'>" + item.email + "</td>"
+                            + "<td class='yourTableTh'>" + item.phone + "</td>"
+                            + "<td class='yourTableTh'>" + item.city + "</td>"
+                            + "<td class='yourTableTh'>" + item.region + "</td>"
+                            + "</tr>";
+                        $('#YourTableId tbody').append(rows);
+                    });
+
+                    // window.location.href = "/Home/Details/" + data.id;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#postResult").val(jqXHR.statusText);
+                }
+            });            
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
